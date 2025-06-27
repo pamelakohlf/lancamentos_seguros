@@ -126,7 +126,6 @@ if gerar:
     st.success("✅ Arquivo gerado com sucesso!")
     st.download_button("📥 Baixar Arquivo CSV", data=csv_buffer, file_name="lancamentos_seguro.csv", mime="text/csv")
 
-streamlit run app.py
 
     #from google.colab import files
 #files.download("lancamentos_seguro.csv")

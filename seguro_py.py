@@ -7,7 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1lCbkpPOtwZc4OQBrfRP-eK9MFHxMZqdR
 """
 
-!pip install python-dateutil
 pip install streamlit
 
 

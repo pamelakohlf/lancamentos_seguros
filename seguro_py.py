@@ -78,29 +78,32 @@ def salvar_csv_em_memoria(lancamentos):
     writer.writerow(cabecalho)
     writer.writerows(lancamentos)
     buffer.seek(0)
-    return buffer
+
+    # Convertendo para binário
+    return buffer.getvalue().encode('utf-8')
+
 
 # === Streamlit App ===
 
 st.title("Gerador de Lançamentos de Seguro")
 
 with st.form("formulario"):
-    numero_apolice = st.text_input("Número da apólice:")
-    seguradora = st.text_input("Seguradora:")
-    valor_seguro = st.number_input("Valor total do seguro (R$):", min_value=0.0, format="%.2f")
-    valor_iof = st.number_input("Valor total do IOF (R$):", min_value=0.0, format="%.2f")
-    valor_outra = st.number_input("Valor de juros/outra despesa (R$):", min_value=0.0, format="%.2f")
+    numero_apolice = st.text_input("Número da apólice:", key="numero_apolice")
+    seguradora = st.text_input("Seguradora:", key="seguradora")
+    valor_seguro = st.number_input("Valor total do seguro (R$):", min_value=0.0, format="%.2f", key="valor_seguro")
+    valor_iof = st.number_input("Valor total do IOF (R$):", min_value=0.0, format="%.2f", key="valor_iof")
+    valor_outra = st.number_input("Valor de juros/outra despesa (R$):", min_value=0.0, format="%.2f", key="valor_outra")
     descricao_outra = ""
     if valor_outra > 0:
-        descricao_outra = st.text_input("Descrição da outra despesa (ex: JUROS):", value="JUROS")
+        descricao_outra = st.text_input("Descrição da outra despesa (ex: JUROS):", value="JUROS", key="descricao_outra")
 
-    data_inicio = st.date_input("Data de início da vigência:")
-    data_fim = st.date_input("Data de fim da vigência:")
+    data_inicio = st.date_input("Data de início da vigência:", key="data_inicio")
+    data_fim = st.date_input("Data de fim da vigência:", key="data_fim")
 
-    conta_apropriar = st.text_input("Número da conta de Prêmios de Seguros a Apropriar:")
-    conta_despesa_seguro = st.text_input("Número da conta de despesa do Seguro:")
-    conta_despesa_iof = st.text_input("Número da conta de despesa de IOF:")
-    conta_despesa_outra = st.text_input("Número da conta de Juros ou outra despesa a ser lançada:")
+    conta_apropriar = st.text_input("Número da conta de Prêmios de Seguros a Apropriar:", key="conta_apropriar")
+    conta_despesa_seguro = st.text_input("Número da conta de despesa do Seguro:", key="conta_despesa_seguro")
+    conta_despesa_iof = st.text_input("Número da conta de despesa de IOF:", key="conta_despesa_iof")
+    conta_despesa_outra = st.text_input("Número da conta de Juros ou outra despesa a ser lançada:", key="conta_despesa_outra")
 
     gerar = st.form_submit_button("Gerar Lançamentos")
 
@@ -121,11 +124,8 @@ if gerar:
     }
 
     lancamentos = gerar_lancamentos(dados)
-    csv_buffer = salvar_csv_em_memoria(lancamentos)
+    csv_binario = salvar_csv_em_memoria(lancamentos)
 
     st.success("✅ Arquivo gerado com sucesso!")
-    st.download_button("📥 Baixar Arquivo CSV", data=csv_buffer, file_name="lancamentos_seguro.csv", mime="text/csv")
+    st.download_button("📥 Baixar Arquivo CSV", data=csv_binario, file_name="lancamentos_seguro.csv", mime="text/csv")
 
-
-    #from google.colab import files
-#files.download("lancamentos_seguro.csv")
